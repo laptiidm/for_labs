@@ -24,8 +24,7 @@
 			{
 
 				double result = (3 * x2 - Math.Pow(x1, 2)) / Math.Pow(Math.Cos((x1 + 2 * x2 + 9) / 0.37), 3);
-				Console.WriteLine("{0,10:F3} | {1,10:F3} | {2,15:F6}", x1, x2, result);
-
+				Console.WriteLine("x1 = {0,-8:F3} | x2 = {1,-8:F3} | result = {2,-15:F6}", x1, x2, result);
 				if (result > 0) { sumOfAllIntermediateResults += result; }
 			}
 		}
