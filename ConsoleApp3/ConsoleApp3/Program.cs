@@ -61,5 +61,9 @@ class Program
 
 			Console.WriteLine(); // для кращої читабельності
 		}
+
+
+		string str = 'text';
+		Console.WriteLine(str.Length);
 	}
 }
