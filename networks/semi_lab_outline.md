@@ -8,7 +8,7 @@
 
 | Елемент | Призначення | Пристрій |
 | :--- | :--- | :--- |
-| **R0** (Router0) | **Маршрутизатор** (Шлюз між усіма підмережами, DHCP Relay, OSPF). | Cisco 2911 |
+| **R0** (Router0) | **Маршрутизатор** (Шлюз між усіма підмережами, DHCP Relay). | Cisco 2911 |
 | **SW0** (Switch0) | Комутатор LAN 1 (Layer 2). | Cisco 2960-24TT |
 | **SW1** (Multilayer Switch) | Комутатор LAN 2 (Layer 2/3). | Cisco 3650-24PS |
 | **Server0** | Центральний DHCP та HTTP-сервер. | Server-PT |
