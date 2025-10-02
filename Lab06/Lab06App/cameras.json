@@ -1,0 +1,35 @@
+[
+  {
+    "Model": "X100V",
+    "Manufacturer": "Fujifilm",
+    "Megapixels": 26.1,
+    "BatteryCapacity": 1260,
+    "Weight": 478,
+    "Price": 1399.99,
+    "ReleaseYear": 2020,
+    "HasWiFi": true,
+    "HasInterchangeableLens": false
+  },
+  {
+    "Model": "EOS R5",
+    "Manufacturer": "Canon",
+    "Megapixels": 45,
+    "BatteryCapacity": 2130,
+    "Weight": 738,
+    "Price": 3899.00,
+    "ReleaseYear": 2021,
+    "HasWiFi": true,
+    "HasInterchangeableLens": true
+  },
+  {
+    "Model": "Alpha 7 III",
+    "Manufacturer": "Sony",
+    "Megapixels": 24.2,
+    "BatteryCapacity": 2280,
+    "Weight": 650,
+    "Price": 1999.00,
+    "ReleaseYear": 2019,
+    "HasWiFi": true,
+    "HasInterchangeableLens": true
+  }
+]
