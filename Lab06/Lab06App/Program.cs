@@ -1,7 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Text.Json;
-using Lab06Lib; // бібліотека з класом Camera
+﻿using System;          // потрібен для Console.WriteLine, Console.ReadKey
+using System.IO;       // потрібен для File.ReadAllText
+using System.Text.Json;// потрібен для JsonSerializer
+using Lab06Lib;        // потрібен, щоб бачити клас Camera з бібліотеки
+
 
 namespace Lab06App
 {
