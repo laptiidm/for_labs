@@ -110,19 +110,16 @@ void loop() {
     }
   ],
   "connections": [
-    // потенціометр
     [ "uno:5V", "pot1:VCC", "red",   [ "v0" ] ],
     [ "uno:GND.1", "pot1:GND", "black", [ "v0" ] ],
     [ "uno:A0", "pot1:SIG", "green", [ "v0" ] ],
 
-    // перший світлодіод на піні 9 через резистор
     [ "uno:9", "bb1:25t.e", "green", [ "v0" ] ],
     [ "bb1:25t.e", "r1:1", "green", [ "v0" ] ],
     [ "r1:2", "led1:A", "green", [ "v0" ] ],
     [ "led1:C", "bb1:21t.e", "black", [ "v0" ] ],
     [ "bb1:21t.e", "uno:GND.2", "black", [ "v0" ] ],
 
-    // другий світлодіод на піні 5 через резистор
     [ "uno:5", "bb1:29t.e", "blue", [ "v0" ] ],
     [ "bb1:29t.e", "r2:1", "blue", [ "v0" ] ],
     [ "r2:2", "led2:A", "blue", [ "v0" ] ],
