@@ -31,16 +31,12 @@ void setup() {
 }
 
 void loop() {
-  // зчитуємо напругу з потенціометра: 0..1023
   int rotation = analogRead(POT_PIN);
 
-  // масштабуємо до діапазону PWM 0..255
   int brightness = rotation / 4;
 
-  // перший світлодіод — повна яскравість
   analogWrite(LED1_PIN, brightness);
 
-  // другий світлодіод — вдвічі слабше
   analogWrite(LED2_PIN, brightness / 2);
 }
 ```
