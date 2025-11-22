@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36429.23 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmblemDemo", "Lab11\EmblemDemo.csproj", "{0212973D-F9AC-4BA9-8671-65EE132D7DFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0212973D-F9AC-4BA9-8671-65EE132D7DFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0212973D-F9AC-4BA9-8671-65EE132D7DFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0212973D-F9AC-4BA9-8671-65EE132D7DFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0212973D-F9AC-4BA9-8671-65EE132D7DFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {378972AE-4323-4A01-A880-B0E78B878C78}
+	EndGlobalSection
+EndGlobal
