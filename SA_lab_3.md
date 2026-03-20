@@ -56,5 +56,3 @@
 [Переглянути проект у Canva](https://www.canva.com/design/DAHEY24mCGU/hQ-PRLg3rAPOOZAbFtdiYw/view?utm_content=DAHEY24mCGU&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hcdfaf4b621)
 
 ---
-
-Чи потрібно мені додати якісь специфічні таблиці або блок-схеми до цього звіту?
