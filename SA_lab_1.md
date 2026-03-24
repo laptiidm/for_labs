@@ -11,7 +11,7 @@
 ---
 
 ## Посилання на карту
-https://app.xmind.com/share/hz4CJVmX?xid=RGCSyDUv
+[Ментальна карта](https://app.xmind.com/share/hz4CJVmX?xid=k6JBnqB6)
 
 ---
 
