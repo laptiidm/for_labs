@@ -1,30 +1,101 @@
 using Laptii.Blockchain.Lab;
+using Microsoft.AspNetCore.Http.Json;
+using System.Text.Json;
 
-var ldy_Blockchain = new Ldy_Blockchain();
+var ldy_Builder = WebApplication.CreateBuilder(args);
 
-Console.WriteLine("=== Blockchain Mining Demo ===");
-Console.WriteLine("Genesis block initialized.");
+ldy_Builder.Services.Configure<JsonOptions>(
+    ldy_Options =>
+    {
+        ldy_Options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        ldy_Options.SerializerOptions.WriteIndented = true;
+    });
 
-ldy_Blockchain.ldy_AddBlock("First Transaction");
-ldy_Blockchain.ldy_AddBlock("Second Transaction");
+var ldy_BlockchainSingleton = new Ldy_Blockchain();
+var ldy_BlockchainSyncRoot = new Ldy_BlockchainSyncRoot();
 
-Console.WriteLine();
-Console.WriteLine("=== Full Blockchain ===");
+// Seed mempool transactions so the first mined block has user transactions.
+ldy_BlockchainSingleton.ldy_CreateTransaction("Alice", "Bob", 10.50m);
+ldy_BlockchainSingleton.ldy_CreateTransaction("Bob", "Charlie", 4.25m);
+ldy_BlockchainSingleton.ldy_CreateTransaction("Charlie", "Diana", 2.00m);
+ldy_BlockchainSingleton.ldy_CreateTransaction("Diana", "Alice", 1.75m);
 
-for (var ldy_Index = 0; ldy_Index < ldy_Blockchain.Chain.Count; ldy_Index++)
+ldy_Builder.Services.AddSingleton(ldy_BlockchainSingleton);
+ldy_Builder.Services.AddSingleton(ldy_BlockchainSyncRoot);
+
+var ldy_App = ldy_Builder.Build();
+
+ldy_App.Urls.Add("http://localhost:4567");
+
+ldy_App.MapGet(
+    "/ldy/chain",
+    (Ldy_Blockchain ldy_Blockchain) =>
+    {
+        return Results.Ok(ldy_Blockchain.Chain);
+    });
+
+ldy_App.MapGet(
+    "/ldy/mempool",
+    (Ldy_Blockchain ldy_Blockchain) =>
+    {
+        return Results.Ok(ldy_Blockchain.ldy_mempool);
+    });
+
+ldy_App.MapPost(
+    "/ldy/transactions/new",
+    (Ldy_Blockchain ldy_Blockchain, Ldy_BlockchainSyncRoot ldy_SyncRoot, Ldy_CreateTransactionRequest ldy_Request) =>
+    {
+        if (string.IsNullOrWhiteSpace(ldy_Request.Sender)
+            || string.IsNullOrWhiteSpace(ldy_Request.Recipient)
+            || ldy_Request.Amount <= 0)
+        {
+            return Results.BadRequest(
+                new
+                {
+                    message = "Invalid transaction data. Sender, recipient, and positive amount are required."
+                });
+        }
+
+        lock (ldy_SyncRoot)
+        {
+            ldy_Blockchain.ldy_CreateTransaction(
+                ldy_Request.Sender.Trim(),
+                ldy_Request.Recipient.Trim(),
+                ldy_Request.Amount);
+        }
+
+        return Results.Ok(
+            new
+            {
+                message = "Transaction added to mempool.",
+                mempoolCount = ldy_Blockchain.ldy_mempool.Count
+            });
+    });
+
+ldy_App.MapGet(
+    "/ldy/mine",
+    (Ldy_Blockchain ldy_Blockchain, Ldy_BlockchainSyncRoot ldy_SyncRoot) =>
+    {
+        lock (ldy_SyncRoot)
+        {
+            ldy_Blockchain.ldy_AddBlock();
+            var ldy_NewlyMinedBlock = ldy_Blockchain.Chain[^1];
+
+            return Results.Ok(ldy_NewlyMinedBlock);
+        }
+    });
+
+ldy_App.Run();
+
+public class Ldy_CreateTransactionRequest
 {
-    var ldy_Block = ldy_Blockchain.Chain[ldy_Index];
-    var ldy_IsHashLinked = ldy_Index == 0
-        ? ldy_Block.PreviousHash == "Laptii"
-        : ldy_Block.PreviousHash == ldy_Blockchain.Chain[ldy_Index - 1].Hash;
+    public string Sender { get; set; } = string.Empty;
 
-    Console.WriteLine($"Block #{ldy_Block.Index}");
-    Console.WriteLine($"Timestamp   : {ldy_Block.Timestamp}");
-    Console.WriteLine($"Data        : {ldy_Block.Data}");
-    Console.WriteLine($"Nonce       : {ldy_Block.Nonce}");
-    Console.WriteLine($"Hash        : {ldy_Block.Hash}");
-    Console.WriteLine($"PreviousHash: {ldy_Block.PreviousHash}");
-    Console.WriteLine($"Hash Link OK: {ldy_IsHashLinked}");
-    Console.WriteLine($"Ends with 10: {ldy_Block.Hash.EndsWith("10", StringComparison.Ordinal)}");
-    Console.WriteLine(new string('-', 72));
+    public string Recipient { get; set; } = string.Empty;
+
+    public decimal Amount { get; set; }
+}
+
+public class Ldy_BlockchainSyncRoot
+{
 }

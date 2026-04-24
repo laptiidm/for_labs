@@ -6,7 +6,9 @@ public class LDY_Block
 
     public string Timestamp { get; set; } = string.Empty;
 
-    public string Data { get; set; } = string.Empty;
+    public List<Ldy_Transaction> Transactions { get; set; } = new();
+
+    public string MerkleRoot { get; set; } = string.Empty;
 
     public string PreviousHash { get; set; } = string.Empty;
 
