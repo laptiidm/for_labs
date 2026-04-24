@@ -14,12 +14,6 @@ ldy_Builder.Services.Configure<JsonOptions>(
 var ldy_BlockchainSingleton = new Ldy_Blockchain();
 var ldy_BlockchainSyncRoot = new Ldy_BlockchainSyncRoot();
 
-// Seed mempool transactions so the first mined block has user transactions.
-ldy_BlockchainSingleton.ldy_CreateTransaction("Alice", "Bob", 10.50m);
-ldy_BlockchainSingleton.ldy_CreateTransaction("Bob", "Charlie", 4.25m);
-ldy_BlockchainSingleton.ldy_CreateTransaction("Charlie", "Diana", 2.00m);
-ldy_BlockchainSingleton.ldy_CreateTransaction("Diana", "Alice", 1.75m);
-
 ldy_Builder.Services.AddSingleton(ldy_BlockchainSingleton);
 ldy_Builder.Services.AddSingleton(ldy_BlockchainSyncRoot);
 
@@ -41,6 +35,19 @@ ldy_App.MapGet(
         return Results.Ok(ldy_Blockchain.ldy_mempool);
     });
 
+ldy_App.MapGet(
+    "/ldy/balance/{address}",
+    (Ldy_Blockchain ldy_Blockchain, string address) =>
+    {
+        var ldy_Balance = ldy_Blockchain.ldy_GetBalance(address);
+        return Results.Ok(
+            new
+            {
+                address,
+                balance = ldy_Balance
+            });
+    });
+
 ldy_App.MapPost(
     "/ldy/transactions/new",
     (Ldy_Blockchain ldy_Blockchain, Ldy_BlockchainSyncRoot ldy_SyncRoot, Ldy_CreateTransactionRequest ldy_Request) =>
@@ -58,10 +65,21 @@ ldy_App.MapPost(
 
         lock (ldy_SyncRoot)
         {
-            ldy_Blockchain.ldy_CreateTransaction(
-                ldy_Request.Sender.Trim(),
-                ldy_Request.Recipient.Trim(),
-                ldy_Request.Amount);
+            try
+            {
+                ldy_Blockchain.ldy_CreateTransaction(
+                    ldy_Request.Sender.Trim(),
+                    ldy_Request.Recipient.Trim(),
+                    ldy_Request.Amount);
+            }
+            catch (InvalidOperationException ldy_Exception)
+            {
+                return Results.BadRequest(
+                    new
+                    {
+                        message = ldy_Exception.Message
+                    });
+            }
         }
 
         return Results.Ok(

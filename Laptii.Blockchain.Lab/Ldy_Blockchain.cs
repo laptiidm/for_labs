@@ -8,6 +8,7 @@ public class Ldy_Blockchain
     public List<Ldy_Block> Chain { get; } = new();
     public List<Ldy_Transaction> ldy_mempool = new();
     private const string ldy_MiningSuffix = "10";
+    private const decimal ldy_MiningReward = 17m;
 
     public Ldy_Blockchain()
     {
@@ -50,6 +51,19 @@ public class Ldy_Blockchain
 
     public void ldy_CreateTransaction(string sender, string recipient, decimal amount)
     {
+        var ldy_IsSystemSender = sender.Equals("System", StringComparison.Ordinal)
+            || sender.Equals("Coinbase", StringComparison.Ordinal);
+
+        if (!ldy_IsSystemSender)
+        {
+            var ldy_SenderBalance = ldy_GetBalance(sender);
+
+            if (ldy_SenderBalance < amount)
+            {
+                throw new InvalidOperationException("Insufficient funds in the available cash desk");
+            }
+        }
+
         ldy_mempool.Add(
             new Ldy_Transaction
             {
@@ -68,7 +82,7 @@ public class Ldy_Blockchain
             {
                 Sender = "Coinbase",
                 Recipient = "Laptii",
-                Amount = 50m
+                Amount = ldy_MiningReward
             }
         };
         ldy_BlockTransactions.AddRange(ldy_mempool);
@@ -103,6 +117,29 @@ public class Ldy_Blockchain
 
         Chain.Add(ldy_NewBlock);
         ldy_mempool.Clear();
+    }
+
+    public decimal ldy_GetBalance(string address)
+    {
+        decimal ldy_Balance = 0m;
+
+        foreach (var ldy_Block in Chain)
+        {
+            foreach (var ldy_Transaction in ldy_Block.Transactions)
+            {
+                if (ldy_Transaction.Recipient.Equals(address, StringComparison.Ordinal))
+                {
+                    ldy_Balance += ldy_Transaction.Amount;
+                }
+
+                if (ldy_Transaction.Sender.Equals(address, StringComparison.Ordinal))
+                {
+                    ldy_Balance -= ldy_Transaction.Amount;
+                }
+            }
+        }
+
+        return ldy_Balance;
     }
 
     private string ldy_CalculateMerkleRoot(List<Ldy_Transaction> txs)
