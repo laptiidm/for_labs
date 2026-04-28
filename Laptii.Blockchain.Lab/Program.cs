@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Threading;
 using Laptii.Blockchain.Lab;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json;
@@ -16,10 +18,28 @@ var ldy_BlockchainSyncRoot = new Ldy_BlockchainSyncRoot();
 
 ldy_Builder.Services.AddSingleton(ldy_BlockchainSingleton);
 ldy_Builder.Services.AddSingleton(ldy_BlockchainSyncRoot);
+var ldy_HasUrlsArgument = args.Any(
+    ldy_Arg => ldy_Arg.StartsWith("--urls", StringComparison.OrdinalIgnoreCase));
+var ldy_UrlsFromConfiguration = ldy_Builder.Configuration["urls"];
+
+if (string.IsNullOrWhiteSpace(ldy_UrlsFromConfiguration) && !ldy_HasUrlsArgument)
+{
+    var ldy_Port = 4567;
+    if (args.Length > 0
+        && int.TryParse(
+            args[0],
+            NumberStyles.None,
+            CultureInfo.InvariantCulture,
+            out var ldy_ParsedPort)
+        && ldy_ParsedPort is > 0 and <= 65535)
+    {
+        ldy_Port = ldy_ParsedPort;
+    }
+
+    ldy_Builder.WebHost.UseUrls($"http://localhost:{ldy_Port}");
+}
 
 var ldy_App = ldy_Builder.Build();
-
-ldy_App.Urls.Add("http://localhost:4567");
 
 ldy_App.MapGet(
     "/ldy/chain",
@@ -63,7 +83,9 @@ ldy_App.MapPost(
                 });
         }
 
-        lock (ldy_SyncRoot)
+        ldy_SyncRoot.ldy_Gate.Wait();
+
+        try
         {
             try
             {
@@ -81,6 +103,10 @@ ldy_App.MapPost(
                     });
             }
         }
+        finally
+        {
+            ldy_SyncRoot.ldy_Gate.Release();
+        }
 
         return Results.Ok(
             new
@@ -94,13 +120,81 @@ ldy_App.MapGet(
     "/ldy/mine",
     (Ldy_Blockchain ldy_Blockchain, Ldy_BlockchainSyncRoot ldy_SyncRoot) =>
     {
-        lock (ldy_SyncRoot)
+        ldy_SyncRoot.ldy_Gate.Wait();
+
+        try
         {
             ldy_Blockchain.ldy_AddBlock();
             var ldy_NewlyMinedBlock = ldy_Blockchain.Chain[^1];
 
             return Results.Ok(ldy_NewlyMinedBlock);
         }
+        finally
+        {
+            ldy_SyncRoot.ldy_Gate.Release();
+        }
+    });
+
+ldy_App.MapPost(
+    "/ldy/nodes/register",
+    (Ldy_Blockchain ldy_Blockchain, Ldy_BlockchainSyncRoot ldy_SyncRoot, Ldy_RegisterNodesRequest ldy_Request) =>
+    {
+        if (ldy_Request.Nodes is null || ldy_Request.Nodes.Count == 0)
+        {
+            return Results.BadRequest(
+                new
+                {
+                    message = "Provide a non-empty list of node URLs under 'nodes'."
+                });
+        }
+
+        ldy_SyncRoot.ldy_Gate.Wait();
+
+        try
+        {
+            foreach (var ldy_NodeUrl in ldy_Request.Nodes)
+            {
+                ldy_Blockchain.ldy_RegisterNode(ldy_NodeUrl);
+            }
+        }
+        finally
+        {
+            ldy_SyncRoot.ldy_Gate.Release();
+        }
+
+        return Results.Ok(
+            new
+            {
+                message = "Nodes registered.",
+                totalNodes = ldy_Blockchain.ldy_nodes.Count
+            });
+    });
+
+ldy_App.MapGet(
+    "/ldy/nodes/resolve",
+    async (Ldy_Blockchain ldy_Blockchain, Ldy_BlockchainSyncRoot ldy_SyncRoot) =>
+    {
+        await ldy_SyncRoot.ldy_Gate.WaitAsync();
+
+        bool ldy_Replaced;
+
+        try
+        {
+            ldy_Replaced = await ldy_Blockchain.ldy_ResolveConflicts();
+        }
+        finally
+        {
+            ldy_SyncRoot.ldy_Gate.Release();
+        }
+
+        return Results.Ok(
+            new
+            {
+                replaced = ldy_Replaced,
+                message = ldy_Replaced
+                    ? "Chain was replaced with a longer valid chain from a peer."
+                    : "Chain was kept; no longer valid peer chain found."
+            });
     });
 
 ldy_App.Run();
@@ -114,6 +208,12 @@ public class Ldy_CreateTransactionRequest
     public decimal Amount { get; set; }
 }
 
+public class Ldy_RegisterNodesRequest
+{
+    public List<string> Nodes { get; set; } = new();
+}
+
 public class Ldy_BlockchainSyncRoot
 {
+    public SemaphoreSlim ldy_Gate { get; } = new(1, 1);
 }

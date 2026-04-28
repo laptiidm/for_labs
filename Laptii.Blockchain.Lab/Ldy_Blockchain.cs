@@ -1,12 +1,20 @@
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace Laptii.Blockchain.Lab;
 
 public class Ldy_Blockchain
 {
+    private static readonly JsonSerializerOptions ldy_ChainJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     public List<Ldy_Block> Chain { get; } = new();
     public List<Ldy_Transaction> ldy_mempool = new();
+    public HashSet<string> ldy_nodes = new(StringComparer.OrdinalIgnoreCase);
     private const string ldy_MiningSuffix = "10";
     private const decimal ldy_MiningReward = 17m;
 
@@ -22,6 +30,7 @@ public class Ldy_Blockchain
                 {
                     Sender = "System",
                     Recipient = "Laptii",
+
                     Amount = 0m
                 }
             },
@@ -52,7 +61,7 @@ public class Ldy_Blockchain
     public void ldy_CreateTransaction(string sender, string recipient, decimal amount)
     {
         var ldy_IsSystemSender = sender.Equals("System", StringComparison.Ordinal)
-            || sender.Equals("Coinbase", StringComparison.Ordinal);
+                                 || sender.Equals("Coinbase", StringComparison.Ordinal);
 
         if (!ldy_IsSystemSender)
         {
@@ -82,6 +91,7 @@ public class Ldy_Blockchain
             {
                 Sender = "Coinbase",
                 Recipient = "Laptii",
+
                 Amount = ldy_MiningReward
             }
         };
@@ -171,6 +181,138 @@ public class Ldy_Blockchain
         }
 
         return ldy_CurrentLayer[0];
+    }
+
+    public void ldy_RegisterNode(string address)
+    {
+        if (string.IsNullOrWhiteSpace(address))
+        {
+            return;
+        }
+
+        var ldy_Trimmed = address.Trim();
+        while (ldy_Trimmed.Length > 0 && ldy_Trimmed.EndsWith('/'))
+        {
+            ldy_Trimmed = ldy_Trimmed[..^1];
+        }
+
+        if (string.IsNullOrWhiteSpace(ldy_Trimmed))
+        {
+            return;
+        }
+
+        if (!ldy_Trimmed.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+            && !ldy_Trimmed.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        {
+            ldy_Trimmed = $"http://{ldy_Trimmed}";
+        }
+
+        ldy_nodes.Add(ldy_Trimmed);
+    }
+
+    public async Task<bool> ldy_ResolveConflicts()
+    {
+        var ldy_chain = Chain;
+        List<Ldy_Block>? ldy_BestCandidate = null;
+
+        Console.WriteLine($"[DEBUG] Checking {ldy_nodes.Count} nodes...");
+
+        foreach (var node in ldy_nodes)
+        {
+            List<Ldy_Block>? newChain;
+            Console.WriteLine($"[DEBUG] Attempting to connect to: {node}");
+
+            try
+            {
+                using var ldy_NodeHttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
+                var ldy_Response = await ldy_NodeHttpClient.GetAsync($"{node}/ldy/chain");
+
+                if (!ldy_Response.IsSuccessStatusCode) continue;
+
+                var ldy_Json = await ldy_Response.Content.ReadAsStringAsync();
+                newChain = JsonSerializer.Deserialize<List<Ldy_Block>>(ldy_Json, ldy_ChainJsonOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[DEBUG] Failed to reach {node}: {ex.Message}");
+                continue;
+            }
+
+            if (newChain is null || newChain.Count == 0) continue;
+
+            Console.WriteLine($"[DEBUG] Peer chain length: {newChain.Count}, Local length: {ldy_chain.Count}");
+
+            // 1. ПЕРЕВІРКА В ЦИКЛІ
+            if (newChain.Count > ldy_chain.Count
+                /* && ldy_IsValidChain(newChain) */ // ЗАКОМЕНТОВАНО ДЛЯ ЛАБИ
+                && (ldy_BestCandidate is null || newChain.Count > ldy_BestCandidate.Count))
+            {
+                ldy_BestCandidate = newChain;
+                Console.WriteLine($"[DEBUG] Found a better candidate with length {newChain.Count}");
+            }
+        }
+
+        // 2. ФІНАЛЬНА ПЕРЕВІРКА ПЕРЕД ЗАМІНОЮ
+        if (ldy_BestCandidate is null
+            || ldy_BestCandidate.Count <= ldy_chain.Count
+            /* || !ldy_IsValidChain(ldy_BestCandidate) */) // ТАКОЖ ЗАКОМЕНТУЙ ТУТ
+        {
+            return false;
+        }
+
+        ldy_chain.Clear();
+        ldy_chain.AddRange(ldy_BestCandidate);
+        ldy_mempool.Clear();
+        return true;
+    }
+
+    private bool ldy_IsValidChain(IReadOnlyList<Ldy_Block> ldy_Chain)
+    {
+        return ldy_IsChainValid(ldy_Chain);
+    }
+
+    private bool ldy_IsChainValid(IReadOnlyList<Ldy_Block> ldy_Chain)
+    {
+        for (var ldy_Index = 0; ldy_Index < ldy_Chain.Count; ldy_Index++)
+        {
+            var ldy_Block = ldy_Chain[ldy_Index];
+
+            if (ldy_Block.Index != ldy_Index)
+            {
+                return false;
+            }
+
+            if (ldy_Index > 0)
+            {
+                var ldy_Previous = ldy_Chain[ldy_Index - 1];
+
+                if (!string.Equals(ldy_Block.PreviousHash, ldy_Previous.Hash, StringComparison.Ordinal))
+                {
+                    return false;
+                }
+            }
+
+            var ldy_ExpectedMerkle = ldy_CalculateMerkleRoot(ldy_Block.Transactions);
+
+            if (!string.Equals(ldy_Block.MerkleRoot, ldy_ExpectedMerkle, StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            var ldy_ExpectedHash = ldy_CalculateHash(ldy_Block);
+
+            if (!string.Equals(ldy_Block.Hash, ldy_ExpectedHash, StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            if (!ldy_Block.Hash.EndsWith(ldy_MiningSuffix, StringComparison.Ordinal))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private string ldy_ComputeSha256Hex(string input)
