@@ -1,0 +1,6 @@
+total 12
+drwxrwxr-x 3 dmytrolaptii dmytrolaptii 4096 Sep  9 04:33 .
+drwxrwxr-x 4 dmytrolaptii dmytrolaptii 4096 Sep  9 05:14 ..
+-rw-rw-r-- 1 dmytrolaptii dmytrolaptii    0 Sep  9 04:33 Laptii_file1_bak.txt
+-rw-rw-r-- 1 dmytrolaptii dmytrolaptii    0 Sep  9 04:33 Laptii_file2_bak.txt
+drwxrwxr-x 2 dmytrolaptii dmytrolaptii 4096 Sep  9 04:33 Laptii_reports_backup
