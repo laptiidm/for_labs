@@ -2,28 +2,274 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Лабораторна робота №1</title>
 
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/asciinema-player@3.17.0/dist/bundle/asciinema-player.css"
   >
+
+  <style>
+    body {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #222;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 6px;
+    }
+
+    h3 {
+      margin-top: 28px;
+    }
+
+    .meta {
+      margin-bottom: 35px;
+    }
+
+    .task {
+      margin-bottom: 35px;
+    }
+
+    .player {
+      margin-top: 15px;
+      margin-bottom: 25px;
+    }
+
+    code {
+      background: #f4f4f4;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 12px;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+
+    .description {
+      color: #444;
+    }
+  </style>
 </head>
 
 <body>
+
   <h1>Лабораторна робота №1</h1>
 
-  <h2>Створення структури файлів і каталогів</h2>
+  <div class="meta">
+    <p><strong>Тема:</strong> Команди терміналу ОС Linux.</p>
 
-  <div id="player"></div>
+    <p>
+      <strong>Мета:</strong>
+      На прикладі ОС Linux вивчити основні команди терміналу.
+    </p>
+  </div>
+
+
+  <h2>Хід виконання роботи</h2>
+
+
+  <section class="task">
+    <h3>1. Створення та налаштування віртуальної машини</h3>
+
+    <p class="description">
+      VirtualBox було встановлено на macOS через Homebrew:
+    </p>
+
+    <pre><code>brew install --cask virtualbox</code></pre>
+
+    <p>
+      Архітектуру хост-системи було перевірено командою:
+    </p>
+
+    <pre><code>uname -m</code></pre>
+
+    <p>
+      Результат: <code>arm64</code>.
+    </p>
+
+    <p>
+      Віртуальну машину було створено та налаштовано через
+      консольну утиліту <code>VBoxManage</code>.
+    </p>
+
+    <pre><code>VBoxManage createvm \
+  --name "Debian13-DL-Labs" \
+  --ostype Debian13_arm64 \
+  --platform-arch=arm \
+  --register
+
+VBoxManage modifyvm "Debian13-DL-Labs" \
+  --memory 4096 \
+  --cpus 2</code></pre>
+
+    <p>
+      Для VM також було створено віртуальний диск, SATA-контролер,
+      підключено ISO-образ Debian та налаштовано EFI-завантаження.
+    </p>
+  </section>
+
+
+  <section class="task">
+    <h3>2. Встановлення Debian</h3>
+
+    <p class="description">
+      Оскільки Mac використовує архітектуру <code>arm64</code>,
+      було обрано Debian для ARM64.
+    </p>
+
+    <p>
+      Доступні типи Debian у VirtualBox було перевірено командою:
+    </p>
+
+    <pre><code>VBoxManage list ostypes --platform-arch=arm | grep -i debian</code></pre>
+
+    <p>
+      Для віртуальної машини було обрано:
+      <code>Debian13_arm64</code>.
+    </p>
+
+    <p>
+      Для встановлення використано образ
+      <code>debian-13.6.0-arm64-netinst.iso</code>.
+    </p>
+  </section>
+
+
+  <section class="task">
+    <h3>3–6. Робота з каталогами та текстовими файлами</h3>
+
+    <p>
+      Створення заданої структури каталогів та файлів,
+      запис тексту у файли, виведення їхнього вмісту та
+      об'єднання трьох текстових файлів у один.
+    </p>
+
+    <h4>Частина 1 — створення структури каталогів і файлів</h4>
+    <div id="player-01" class="player"></div>
+
+    <h4>Частина 2 — запис та перевірка вмісту текстових файлів</h4>
+    <div id="player-02" class="player"></div>
+
+    <h4>Частина 3 — об'єднання вмісту файлів</h4>
+    <div id="player-03" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>7–9. Додавання C++ коду та пошук за допомогою grep</h3>
+
+    <p>
+      До <code>Laptii_file1.txt</code> додано 10 рядків мовою C++.
+      За допомогою <code>grep</code> виконано пошук рядків зі словом
+      «файл» та пошук файлів, які містять це слово.
+    </p>
+
+    <div id="player-7-9" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>10–12. Копіювання, переміщення та перейменування файлів</h3>
+
+    <p>
+      Виконано копіювання <code>Laptii_all.txt</code> у каталог резервних
+      копій, переміщення <code>Laptii_file3.txt</code> та перейменування
+      <code>Laptii_file2.txt</code> у <code>second.txt</code>.
+    </p>
+
+    <div id="player-10-12" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>13. Формування списку файлів</h3>
+
+    <p>
+      Виведено список файлів каталогу
+      <code>Laptii_texts_backup</code> та записано його у
+      <code>Laptii_files_list.txt</code>.
+    </p>
+
+    <div id="player-13" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>14. Перевірка фінальної структури</h3>
+
+    <p>
+      Після виконання всіх операцій фінальну структуру каталогів
+      та файлів виведено командою <code>tree</code>.
+    </p>
+
+    <div id="player-14" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>15. Документування роботи</h3>
+
+    <p>
+      Виконання основних етапів лабораторної роботи задокументовано
+      за допомогою записів термінальної сесії asciinema.
+    </p>
+  </section>
+
 
   <script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.17.0/dist/bundle/asciinema-player.min.js"></script>
 
   <script>
     AsciinemaPlayer.create(
       'casts/01_create_structure.cast',
-      document.getElementById('player')
+      document.getElementById('player-01')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/02_create_structure.cast',
+      document.getElementById('player-02')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/03_create_structure.cast',
+      document.getElementById('player-03')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/7_9_create_structure.cast',
+      document.getElementById('player-7-9')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/10_12create_structure.cast',
+      document.getElementById('player-10-12')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/13create_structure.cast',
+      document.getElementById('player-13')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/14create_structure.cast',
+      document.getElementById('player-14')
     );
   </script>
+
 </body>
 </html>
