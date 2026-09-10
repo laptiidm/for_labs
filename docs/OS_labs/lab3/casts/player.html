@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Лабораторна робота №3</title>
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/asciinema-player@3.17.0/dist/bundle/asciinema-player.css"
+  >
+
+  <style>
+    body {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #222;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 6px;
+    }
+
+    h3 {
+      margin-top: 28px;
+    }
+
+    h4 {
+      margin-top: 25px;
+      margin-bottom: 10px;
+    }
+
+    .meta {
+      margin-bottom: 35px;
+    }
+
+    .task {
+      margin-bottom: 40px;
+    }
+
+    .player {
+      margin-top: 15px;
+      margin-bottom: 25px;
+    }
+
+    code {
+      background: #f4f4f4;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 12px;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+
+    .description {
+      color: #444;
+    }
+
+    .note {
+      background: #f7f7f7;
+      border-left: 4px solid #aaa;
+      padding: 10px 14px;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Лабораторна робота №3</h1>
+
+  <div class="meta">
+    <p>
+      <strong>Тема:</strong>
+      Користувачі, групи, права доступу та керування процесами у ОС Linux.
+    </p>
+
+    <p>
+      <strong>Мета:</strong>
+      Навчитися створювати користувачів різними способами,
+      керувати групами та правами доступу, працювати з ACL,
+      а також контролювати процеси у терміналі Linux.
+    </p>
+  </div>
+
+
+  <h2>Хід виконання роботи</h2>
+
+
+  <section class="task">
+    <h3>1–5. Створення та налаштування користувачів</h3>
+
+    <p class="description">
+      Створено користувачів за допомогою команд
+      <code>adduser</code> та <code>useradd</code>.
+      Перевірено створення домашніх каталогів, задано паролі,
+      виконано вхід під новим користувачем та порівняно записи
+      у файлі <code>/etc/passwd</code>.
+    </p>
+
+    <div id="player-01" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>6–7. Створення групи та керування членством</h3>
+
+    <p class="description">
+      Створено групу <code>laptii_labusers</code>.
+      До неї додано створених користувачів та перевірено
+      їхнє членство у групі.
+    </p>
+
+    <div id="player-02" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>8–13. Права доступу та ACL</h3>
+
+    <p class="description">
+      Створено каталог <code>/laptii_labsecure</code>
+      з підкаталогами <code>docs</code> та <code>private</code>.
+      Налаштовано власників, групи та стандартні права Linux.
+    </p>
+
+    <p>
+      Для каталогу <code>docs</code> групі
+      <code>laptii_labusers</code> надано повний доступ,
+      а каталог <code>private</code> спочатку доступний лише
+      користувачу <code>root</code>.
+    </p>
+
+    <p>
+      За допомогою ACL користувачу
+      <code>laptii_useradd02</code> надано права
+      <code>r-x</code> на каталог <code>private</code>.
+      Для каталогу право <code>x</code> необхідне для переходу
+      до його об'єктів, тому <code>r-x</code> фактично забезпечує
+      доступ лише для читання без можливості створювати або
+      змінювати файли.
+    </p>
+
+    <div id="player-03" class="player"></div>
+
+    <h4>Уточнення прав доступу до секретного файлу</h4>
+
+    <p class="description">
+      Додатково права файлу <code>laptii_secret.txt</code>
+      встановлено як <code>600</code>, тобто читання і запис
+      дозволені лише користувачу <code>root</code>.
+      Також перевірено відмову в доступі для
+      <code>laptii_useradd02</code>.
+    </p>
+
+    <div id="player-03-improvement" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>14–15. Файл /etc/shadow та журнал авторизацій</h3>
+
+    <p class="description">
+      Переглянуто записи нових користувачів у файлі
+      <code>/etc/shadow</code> та перевірено системний журнал
+      на наявність записів, пов'язаних з авторизацією
+      створених користувачів.
+    </p>
+
+    <div id="player-04" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>16–18. Основи керування процесами</h3>
+
+    <p class="description">
+      Створено файл <code>laptii_task1.txt</code> та відкрито його
+      у редакторі <code>nano</code>. Продемонстровано перегляд
+      запущеного процесу, його призупинення та повернення
+      на передній план.
+    </p>
+
+    <p>
+      Також команду <code>sleep</code> запущено у фоновому режимі,
+      перевірено список фонових задач за допомогою
+      <code>jobs</code> та повернуто процес на передній план
+      командою <code>fg</code>.
+    </p>
+
+    <div id="player-05" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>19–20. Моніторинг та завершення процесів</h3>
+
+    <p class="description">
+      Запущено декілька процесів та виконано їх моніторинг
+      за допомогою команди <code>top</code>.
+    </p>
+
+    <p>
+      У <code>top</code> список процесів відсортовано
+      за використанням оперативної пам'яті.
+      Один із власних процесів завершено безпосередньо
+      з інтерфейсу <code>top</code>, інші процеси завершено
+      командою <code>kill</code>.
+    </p>
+
+    <div id="player-06" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>Коментар</h3>
+
+    <p>
+      Основні етапи лабораторної роботи задокументовано
+      у вигляді записів термінальних сесій за допомогою
+      утиліти <code>asciinema</code>.
+    </p>
+
+    <p>
+      Завдання логічно об'єднано у тематичні блоки:
+      керування користувачами, групами, правами доступу,
+      ACL, журналами авторизації та процесами.
+    </p>
+  </section>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.17.0/dist/bundle/asciinema-player.min.js"></script>
+
+  <script>
+    AsciinemaPlayer.create(
+      'casts/01_users.cast',
+      document.getElementById('player-01')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/02_groups.cast',
+      document.getElementById('player-02')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/03_permissions_acl.cast',
+      document.getElementById('player-03')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/03_improvement_permissions_acl.cast',
+      document.getElementById('player-03-improvement')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/04_security_logs.cast',
+      document.getElementById('player-04')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/05_processes_basics.cast',
+      document.getElementById('player-05')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/06_process_monitoring.cast',
+      document.getElementById('player-06')
+    );
+  </script>
+
+</body>
+</html>
