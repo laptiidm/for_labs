@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Лабораторна робота №5 — C++ та робота з файлами</title>
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/asciinema-player@3.17.0/dist/bundle/asciinema-player.css"
+  >
+
+  <style>
+    body {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #222;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 6px;
+    }
+
+    h3 {
+      margin-top: 30px;
+    }
+
+    h4 {
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+
+    .meta {
+      margin-bottom: 35px;
+    }
+
+    .task {
+      margin-bottom: 45px;
+    }
+
+    .player {
+      margin-top: 15px;
+      margin-bottom: 25px;
+    }
+
+    .description {
+      color: #444;
+    }
+
+    .note {
+      background: #f5f5f5;
+      border-left: 4px solid #999;
+      padding: 10px 14px;
+      margin: 15px 0;
+    }
+
+    code {
+      background: #f4f4f4;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 12px;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Лабораторна робота №5</h1>
+
+  <div class="meta">
+    <p>
+      <strong>Тема:</strong>
+      Створення, компіляція та збірка програм.
+      Робота з оточенням, введенням і виведенням
+      та текстовими файлами у UNIX-подібних системах.
+    </p>
+
+    <p>
+      <strong>Мета:</strong>
+      Навчитися створювати та компілювати програми у терміналі,
+      виконувати компонування багатофайлових проєктів,
+      автоматизувати збірку та працювати з текстовими файлами
+      засобами стандартної бібліотеки C/C++.
+    </p>
+  </div>
+
+
+  <h2>Виконання лабораторної роботи</h2>
+
+
+  <section class="task">
+    <h3>Завдання 1. Програма myclock.cpp</h3>
+
+    <p class="description">
+      Створено програму <code>myclock.cpp</code>,
+      яка отримує поточний системний час за допомогою
+      функцій <code>time()</code> та <code>ctime()</code>.
+    </p>
+
+    <p class="description">
+      Програма також виводить ім'я та прізвище автора.
+      Вихідний файл скомпільовано за допомогою
+      <code>g++</code>, після чого отриману програму
+      запущено у терміналі.
+    </p>
+
+    <p class="description">
+      Додатково результат програми порівняно
+      із системною командою <code>date</code>.
+    </p>
+
+    <div id="player-01" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>Завдання 2. Багатофайловий C++-проєкт</h3>
+
+    <p class="description">
+      Створено багатофайловий проєкт, що складається
+      із заголовочного файла <code>print_up.h</code>,
+      файла реалізації <code>print_up.cpp</code>
+      та головного файла <code>main.cpp</code>.
+    </p>
+
+    <p class="description">
+      Функція <code>print_up()</code> отримує текстовий рядок,
+      перетворює його символи у верхній регістр
+      та виводить результат на екран.
+    </p>
+
+    <p class="description">
+      Файли <code>main.cpp</code> та <code>print_up.cpp</code>
+      окремо скомпільовано у об'єктні файли,
+      після чого виконано їх компонування
+      у готову програму.
+    </p>
+
+    <p class="description">
+      Для автоматизації компіляції та компонування
+      створено Bash-скрипт <code>build.sh</code>.
+    </p>
+
+    <div id="player-02" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>Завдання 3. Читання текстового файла</h3>
+
+    <p class="description">
+      Створено текстовий файл із 20 реченнями
+      англійською мовою рівня B1 та їх перекладом
+      українською мовою.
+    </p>
+
+    <p class="description">
+      Програма <code>file_reader.cpp</code> отримує шлях
+      до файла як перший аргумент командного рядка
+      та виводить його вміст у термінал.
+    </p>
+
+    <p class="description">
+      Для роботи з файлом використано функції
+      <code>fopen()</code>, <code>fprintf()</code>,
+      <code>fseek()</code>, <code>fgetc()</code>,
+      <code>fputc()</code> та <code>fclose()</code>.
+    </p>
+
+    <p class="description">
+      Перевірено роботу програми як із відносним,
+      так і з абсолютним шляхом до файла.
+      Також реалізовано обробку помилки відкриття
+      неіснуючого файла та неправильного запуску програми.
+    </p>
+
+    <div id="player-03" class="player"></div>
+  </section>
+
+
+  <section class="task">
+    <h3>Завдання 4. Нумерація рядків текстового файла</h3>
+
+    <p class="description">
+      Відповідно до індивідуального завдання створено програму,
+      яка читає текстовий файл та створює новий файл,
+      у якому кожному рядку додається номер.
+    </p>
+
+    <p class="description">
+      Перед формуванням результату програма підраховує
+      загальну кількість рядків та визначає ширину
+      числового поля.
+    </p>
+
+    <p class="description">
+      Завдяки форматованому виводу номери рядків
+      вирівнюються незалежно від того, скільки цифр
+      містить найбільший номер.
+    </p>
+
+    <pre><code> 1. First line
+ 2. Second line
+...
+10. Tenth line
+11. Eleventh line</code></pre>
+
+    <p class="description">
+      Також передбачено обробку неправильного запуску,
+      відсутності вхідного файла та помилок
+      створення вихідного файла.
+    </p>
+
+    <div id="player-04" class="player"></div>
+  </section>
+
+
+  <h2>Висновок</h2>
+
+  <p class="description">
+    Під час лабораторної роботи було практично відпрацьовано
+    створення та компіляцію C++-програм у Linux,
+    окрему компіляцію модулів та компонування
+    багатофайлового проєкту.
+  </p>
+
+  <p class="description">
+    Також було створено Bash-скрипт для автоматичної збірки,
+    розглянуто передачу параметрів програмам через командний рядок
+    та роботу з текстовими файлами за допомогою стандартних
+    функцій введення і виведення.
+  </p>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.17.0/dist/bundle/asciinema-player.min.js"></script>
+
+  <script>
+    AsciinemaPlayer.create(
+      'casts/01_myclock.cast',
+      document.getElementById('player-01')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/02_multifile_build.cast',
+      document.getElementById('player-02')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/03_file_io.cast',
+      document.getElementById('player-03')
+    );
+
+    AsciinemaPlayer.create(
+      'casts/04_number_lines.cast',
+      document.getElementById('player-04')
+    );
+  </script>
+
+</body>
+</html>
