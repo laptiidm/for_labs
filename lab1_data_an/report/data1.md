@@ -31,6 +31,28 @@
 - NASA POWER: https://power.larc.nasa.gov/
 - Copernicus ERA5: https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels-timeseries
 
+### Отримання даних
+
+**NOAA GHCN Daily**
+
+Дані NOAA були отримані через API NCEI Data Service. Використано станцію `UPM00033345` (KIEV), період 2020–2024 років та метричні одиниці вимірювання.
+
+API-запит для отримання CSV:
+
+https://www.ncei.noaa.gov/access/services/data/v1?dataset=daily-summaries&stations=UPM00033345&startDate=2020-01-01&endDate=2024-12-31&format=csv&units=metric&includeStationName=true&includeStationLocation=true
+
+**NASA POWER**
+
+Дані NASA POWER також були отримані через API. Запит сформовано для координат Києва `50.4 N, 30.5331 E`, щоденного кроку та періоду 2020–2024 років.
+
+API-запит для отримання CSV:
+
+https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2M_MAX,T2M_MIN,T2MDEW,RH2M,PRECTOTCORR,WS10M,PS&community=AG&longitude=30.5331&latitude=50.4&start=20200101&end=20241231&format=CSV&time-standard=UTC
+
+**Copernicus ERA5**
+
+Набір ERA5 було завантажено стандартним способом через вебінтерфейс **Copernicus Climate Data Store**. На сайті було вибрано потрібний набір даних, часовий період, метеорологічні параметри та формат файлу, після чого сформований файл було завантажено локально.
+
 ### Скріншоти джерел
 
 ![NOAA GHCN Daily](../screenshots/source_noaa.png)
