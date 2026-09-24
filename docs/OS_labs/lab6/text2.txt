@@ -1,0 +1,3 @@
+This file contains information about pthread.
+Linux supports POSIX threads.
+pthread_create creates a new thread.

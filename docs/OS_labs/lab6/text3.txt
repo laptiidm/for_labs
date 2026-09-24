@@ -1,0 +1,4 @@
+C++ is a programming language.
+This file does not contain our test phrase.
+Threads share process memory.
+

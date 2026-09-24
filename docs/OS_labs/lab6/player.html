@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Лабораторна робота №6</title>
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.jsdelivr.net/npm/asciinema-player@3.10.0/dist/bundle/asciinema-player.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            line-height: 1.5;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            margin-top: 0;
+            margin-bottom: 35px;
+        }
+
+        .task {
+            margin-bottom: 45px;
+        }
+
+        .conclusion {
+            margin-top: 12px;
+            font-weight: 600;
+        }
+
+        .player {
+            margin-top: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Лабораторна робота №6</h1>
+    <p class="subtitle">
+        Особливості роботи з процесами та потоками у C++ для ОС Linux
+    </p>
+
+    <section class="task">
+        <h2>Завдання 1 — fork()</h2>
+        <div id="player1" class="player"></div>
+        <p class="conclusion">
+            Висновок: один виклик fork() створює один дочірній процес.
+            Батьківський і дочірній процеси мають різні PID та продовжують виконання коду після fork().
+        </p>
+    </section>
+
+    <section class="task">
+        <h2>Завдання 2 — визначення батьківського та дочірнього процесів</h2>
+        <div id="player2" class="player"></div>
+        <p class="conclusion">
+            Висновок: у батьківському процесі fork() повертає PID дочірнього процесу,
+            а в дочірньому — 0. Черговість виконання процесів не є гарантованою.
+        </p>
+    </section>
+
+    <section class="task">
+        <h2>Завдання 3 — fork() та execve()</h2>
+        <div id="player3" class="player"></div>
+        <p class="conclusion">
+            Висновок: fork() створює дочірній процес, а execve() замінює програму,
+            яку він виконує, на іншу програму — у цьому випадку ls.
+        </p>
+    </section>
+
+    <section class="task">
+        <h2>Завдання 4 — wait()</h2>
+        <div id="player4" class="player"></div>
+        <p class="conclusion">
+            Висновок: wait() дозволяє батьківському процесу призупинити виконання
+            до моменту завершення дочірнього процесу.
+        </p>
+    </section>
+
+    <section class="task">
+        <h2>Завдання 5 — створення потоків pthread</h2>
+        <div id="player5" class="player"></div>
+        <p class="conclusion">
+            Висновок: pthread_create() створює нові потоки всередині одного процесу,
+            а pthread_join() дозволяє головному потоку дочекатися їх завершення.
+        </p>
+    </section>
+
+    <section class="task">
+        <h2>Завдання 6 — передача аргументів у потоки</h2>
+        <div id="player6" class="player"></div>
+        <p class="conclusion">
+            Висновок: дані можна передавати потоковим функціям через аргумент void*.
+            Декілька значень зручно передати через одну структуру.
+        </p>
+    </section>
+
+    <section class="task">
+        <h2>Завдання 7 — повернення результатів із потоків</h2>
+        <div id="player7" class="player"></div>
+        <p class="conclusion">
+            Висновок: pthread_exit() дозволяє потоку передати результат,
+            а pthread_join() — отримати цей результат у головному потоці.
+        </p>
+    </section>
+
+    <section class="task">
+        <h2>Завдання 8 — ідентифікатори потоків</h2>
+        <div id="player8" class="player"></div>
+        <p class="conclusion">
+            Висновок: pthread_self() повертає ідентифікатор поточного потоку,
+            а pthread_equal() використовується для коректного порівняння двох ідентифікаторів.
+        </p>
+    </section>
+
+    <section class="task">
+        <h2>Завдання 9 — синхронізація потоку</h2>
+        <div id="player9" class="player"></div>
+        <p class="conclusion">
+            Висновок: перед pthread_join() можна перевірити, що потік не очікує сам себе.
+            Результат обчислення потоку передається назад у головну програму.
+        </p>
+    </section>
+
+    <section class="task">
+        <h2>Завдання 10 — варіант 5: багатопотоковий пошук у текстових файлах</h2>
+        <div id="player10" class="player"></div>
+        <p class="conclusion">
+            Висновок: текстові файли каталогу можуть оброблятися паралельно —
+            окремі потоки одночасно виконують пошук заданого слова або фрази у різних файлах.
+        </p>
+    </section>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.10.0/dist/bundle/asciinema-player.min.js"></script>
+
+    <script>
+        const casts = [
+            "casts/01_task1.cast",
+            "casts/02_task2.cast",
+            "casts/03_task3.cast",
+            "casts/04_task4.cast",
+            "casts/05_task5.cast",
+            "casts/06_task6.cast",
+            "casts/07_task7.cast",
+            "casts/08_task8.cast",
+            "casts/09_task9.cast",
+            "casts/10_task10.cast"
+        ];
+
+        casts.forEach((cast, index) => {
+            AsciinemaPlayer.create(
+                cast,
+                document.getElementById(`player${index + 1}`),
+                {
+                    fit: "width",
+                    idleTimeLimit: 2,
+                    autoPlay: false
+                }
+            );
+        });
+    </script>
+
+</body>
+</html>

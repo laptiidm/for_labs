@@ -1,0 +1,3 @@
+Linux is an operating system.
+Processes are managed by Linux.
+Threads can work simultaneously.
