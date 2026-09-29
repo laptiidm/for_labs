@@ -1,5 +1,5 @@
 # Lean Canvas — Preply
-## Дослідницький файл для лабораторної роботи
+## файл - чернетка для лабораторної роботи
 
 **Продукт:** Preply  
 **Ніша:** EdTech / online language learning / marketplace онлайн-репетиторів  
