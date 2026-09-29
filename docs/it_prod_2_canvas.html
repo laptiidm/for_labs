@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lean Canvas — Preply</title>
+
+  <style>
+    :root {
+      --bg: #11141c;
+      --surface: #1b1f2a;
+      --surface-2: #20263a;
+      --accent: #33489f;
+      --accent-soft: #5268cc;
+      --text: #f7f8ff;
+      --muted: #b8bfd4;
+      --border: #727b98;
+      --line: rgba(255,255,255,.11);
+      --radius: 18px;
+      --shadow: 0 12px 30px rgba(0,0,0,.22);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(51,72,159,.34), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    a { color: #aebcff; }
+
+    .source-ref {
+      margin-left: 3px;
+      font-size: .72em;
+      font-weight: 800;
+      vertical-align: super;
+      white-space: nowrap;
+    }
+
+    .source-ref a {
+      color: #b9c5ff;
+      text-decoration: none;
+    }
+
+    .source-ref a:hover {
+      text-decoration: underline;
+    }
+
+    .sources li {
+      scroll-margin-top: 20px;
+    }
+
+    .page {
+      width: min(1600px, calc(100% - 32px));
+      margin: 20px auto 40px;
+    }
+
+    .hero {
+      padding: 28px 32px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #2d3f8e, #253574);
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      text-align: center;
+      font-size: clamp(30px, 4vw, 52px);
+      letter-spacing: .02em;
+    }
+
+    .hero p {
+      max-width: 920px;
+      margin: 10px auto 0;
+      text-align: center;
+      color: #dce2ff;
+      font-size: 15px;
+    }
+
+    .canvas {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .card {
+      min-width: 0;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(32,38,58,.96), rgba(26,30,40,.98));
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .number {
+      flex: 0 0 34px;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--accent);
+      border: 1px solid #7184df;
+      font-weight: 800;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.15;
+    }
+
+    .card h3 {
+      margin: 18px 0 8px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: #dce2ff;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .card p {
+      margin: 0 0 10px;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .card li {
+      margin: 7px 0;
+    }
+
+    .strong {
+      font-weight: 750;
+      color: #fff;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-block;
+      margin: 4px 6px 4px 0;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(82,104,204,.14);
+      border: 1px solid rgba(116,136,225,.42);
+      color: #e8ecff;
+      font-size: 13px;
+    }
+
+    .metric {
+      padding: 11px 12px;
+      margin: 10px 0;
+      border-left: 3px solid var(--accent-soft);
+      border-radius: 8px;
+      background: rgba(82,104,204,.10);
+    }
+
+    .formula {
+      display: block;
+      margin-top: 6px;
+      color: #cbd3ff;
+      font-size: 13px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .north-star {
+      padding: 14px;
+      margin-top: 12px;
+      border: 1px solid #7e8fe0;
+      border-radius: 12px;
+      background: rgba(51,72,159,.26);
+    }
+
+    .north-star small {
+      display: block;
+      color: #cbd3ff;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-weight: 700;
+    }
+
+    .sources {
+      margin-top: 14px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(27,31,42,.96);
+      box-shadow: var(--shadow);
+    }
+
+    .sources summary {
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .sources ol {
+      margin-bottom: 0;
+      padding-left: 22px;
+    }
+
+    .sources li {
+      margin: 7px 0;
+      word-break: break-word;
+    }
+
+    .footnote {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 1100px) {
+      .canvas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 20px, 1600px);
+        margin-top: 10px;
+      }
+
+      .canvas {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 22px 18px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: A3 landscape;
+        margin: 8mm;
+      }
+
+      body {
+        background: #fff;
+        color: #111;
+      }
+
+      .page {
+        width: 100%;
+        margin: 0;
+      }
+
+      .hero,
+      .card,
+      .sources {
+        box-shadow: none;
+      }
+
+      .sources {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="hero">
+      <h1>LEAN CANVAS: PREPLY</h1>
+      <p>
+        Онлайн-платформа для персонального навчання 1-на-1 з репетитором,
+        доповнена marketplace-моделлю, підпискою та AI-інструментами
+        <sup class="source-ref"><a href="#source-1" title="Preply — About us">[1]</a></sup>.
+      </p>
+    </header>
+
+    <section class="canvas">
+
+      <!-- 1 -->
+      <article class="card">
+        <div class="card-header">
+          <div class="number">1</div>
+          <h2>Проблема</h2>
+        </div>
+
+        <ul>
+          <li>Недостатньо живої розмовної практики у self-learning продуктах <sup class="source-ref"><a href="#source-1" title="Preply — About us">[1]</a></sup>.</li>
+          <li>Стандартні курси погано адаптуються до конкретної цілі користувача.</li>
+          <li>Складно знайти репетитора за бюджетом, графіком і спеціалізацією.</li>
+          <li>Важко підтримувати регулярність навчання.</li>
+        </ul>
+
+        <h3>Існуючі альтернативи</h3>
+        <p>
+          <span class="pill">italki</span>
+          <span class="pill">Cambly</span>
+          <span class="pill">AmazingTalker</span>
+          <span class="pill">Lingoda</span>
+          <span class="pill">Duolingo</span>
+          <span class="pill">Babbel</span>
+          <span class="pill">мовні школи</span>
+          <span class="pill">локальні репетитори</span>
+        </p>
+      </article>
+
+      <!-- 2 -->
+      <article class="card">
+        <div class="card-header">
+          <div class="number">2</div>
+          <h2>Сегменти користувачів</h2>
+        </div>
+
+        <p><span class="strong">Професіонали:</span> мова для роботи, співбесід, міжнародної комунікації та релокації.</p>
+        <p><span class="strong">Особисті цілі:</span> подорожі, переїзд, культура, спілкування.</p>
+        <p><span class="strong">Студенти:</span> іспити, навчання та покращення знань.</p>
+        <p><span class="strong">B2B:</span> компанії, які навчають співробітників <sup class="source-ref"><a href="#source-1" title="Preply — About us">[1]</a></sup>.</p>
+
+        <h3>Early adopters</h3>
+        <p class="strong">
+          Дорослий спеціаліст, якому потрібно швидко покращити розмовну англійську
+          для роботи або релокації.
+        </p>
+        <p class="muted">
+          Має конкретну потребу, дедлайн і вищу готовність платити за результат.
+        </p>
+      </article>
+
+      <!-- 3 -->
+      <article class="card">
+        <div class="card-header">
+          <div class="number">3</div>
+          <h2>Унікальна ціннісна пропозиція</h2>
+        </div>
+
+        <p class="strong">
+          Персональне навчання 1-на-1 з репетитором, підібраним під мету,
+          бюджет і графік користувача, доповнене AI-інструментами для швидшого прогресу
+          <sup class="source-ref"><a href="#source-11" title="Preply — AI-powered features">[11]</a></sup>.
+        </p>
+
+        <h3>High-level concept</h3>
+        <p>
+          Marketplace репетиторів + персоналізована мовна школа в одному продукті.
+        </p>
+
+        <h3>Ключова цінність</h3>
+        <ul>
+          <li>реальний викладач;</li>
+          <li>персональна програма;</li>
+          <li>гнучкий графік;</li>
+          <li>регулярна практика;</li>
+          <li>вимірюваний прогрес.</li>
+        </ul>
+      </article>
+
+      <!-- 4 -->
+      <article class="card">
+        <div class="card-header">
+          <div class="number">4</div>
+          <h2>Рішення</h2>
+        </div>
+
+        <ul>
+          <li>Глобальний marketplace репетиторів <sup class="source-ref"><a href="#source-1" title="Preply — About us">[1]</a></sup>.</li>
+          <li>Пошук за мовою, ціною, графіком і спеціалізацією <sup class="source-ref"><a href="#source-5" title="Preply Help — Tutor matching">[5]</a></sup>.</li>
+          <li>Trial lesson перед довгостроковим навчанням <sup class="source-ref"><a href="#source-3" title="Preply Help — Subscription model">[3]</a></sup>.</li>
+          <li>28-денна модель підписки <sup class="source-ref"><a href="#source-3" title="Preply Help — Subscription model">[3]</a></sup>.</li>
+          <li>Вбудовані відеоуроки, чат і scheduling.</li>
+          <li>Навчальні матеріали та progress tracking.</li>
+          <li>AI-інструменти для практики й персоналізації <sup class="source-ref"><a href="#source-11" title="Preply — AI-powered features">[11]</a></sup>.</li>
+        </ul>
+      </article>
+
+      <!-- 5 -->
+      <article class="card">
+        <div class="card-header">
+          <div class="number">5</div>
+          <h2>Канали</h2>
+        </div>
+
+        <ul>
+          <li>SEO та органічний пошук.</li>
+          <li>Власний сайт і landing pages.</li>
+          <li>Google Play <sup class="source-ref"><a href="#source-9" title="Google Play — Preply">[9]</a></sup> та Apple App Store <sup class="source-ref"><a href="#source-10" title="App Store — Preply">[10]</a></sup>.</li>
+          <li>Affiliate program <sup class="source-ref"><a href="#source-8" title="Preply — Affiliate program">[8]</a></sup>.</li>
+          <li>Партнерства та co-marketing <sup class="source-ref"><a href="#source-8" title="Preply — Affiliate & partnerships">[8]</a></sup>.</li>
+          <li>B2B sales <sup class="source-ref"><a href="#source-1" title="Preply — About us">[1]</a></sup>.</li>
+          <li>Content marketing.</li>
+          <li>Paid acquisition — як аналітична гіпотеза.</li>
+        </ul>
+      </article>
+
+      <!-- 6 -->
+      <article class="card">
+        <div class="card-header">
+          <div class="number">6</div>
+          <h2>Потоки доходів</h2>
+        </div>
+
+        <ul>
+          <li>Основний revenue stream — marketplace commission із занять репетиторів <sup class="source-ref"><a href="#source-4" title="Preply Help — Commission model">[4]</a></sup>.</li>
+          <li>100% вартості першого trial lesson нового студента утримується платформою як комісія <sup class="source-ref"><a href="#source-4" title="Preply Help — Commission model">[4]</a></sup>.</li>
+          <li>З наступних уроків Preply утримує 18–33% залежно від кількості проведених уроків репетитором <sup class="source-ref"><a href="#source-4" title="Preply Help — Commission model">[4]</a></sup>.</li>
+          <li>Студент оплачує уроки у межах 28-денного subscription cycle <sup class="source-ref"><a href="#source-3" title="Preply Help — Subscription model">[3]</a></sup>.</li>
+          <li>B2B-напрям корпоративного мовного навчання <sup class="source-ref"><a href="#source-1" title="Preply — About us">[1]</a></sup>.</li>
+        </ul>
+
+        <p class="muted">
+          Важливо: повна сума, яку платить студент, не дорівнює revenue Preply. Для marketplace це ближче до GMV, тоді як доходом платформи є насамперед її комісія.
+        </p>
+      </article>
+
+      <!-- 7 -->
+      <article class="card">
+        <div class="card-header">
+          <div class="number">7</div>
+          <h2>Структура витрат</h2>
+        </div>
+
+        <ul>
+          <li>Web, mobile і backend development.</li>
+          <li>AI та cloud infrastructure.</li>
+          <li>Відеозв’язок і storage.</li>
+          <li>Sales & Marketing.</li>
+          <li>Affiliate commissions.</li>
+          <li>Customer Support.</li>
+          <li>Payment processing.</li>
+          <li>Trust & Safety / antifraud.</li>
+          <li>Tutor acquisition і tutor support.</li>
+          <li>Заробітна плата, legal та admin.</li>
+        </ul>
+      </article>
+
+      <!-- 8 -->
+      <article class="card">
+        <div class="card-header">
+          <div class="number">8</div>
+          <h2>Ключові метрики</h2>
+        </div>
+
+        <div class="metric">
+          <strong>1. Conversion Rate — Trial → Subscription</strong> <sup class="source-ref"><a href="#source-12" title="Курс — Конспект 5.1">[12]</a></sup><br>
+          Частка користувачів, які після пробного уроку переходять до платного регулярного навчання.
+          <span class="formula">Formula: paid subscriptions / trial lessons × 100%</span>
+        </div>
+
+        <div class="metric">
+          <strong>2. Retention Rate — 28-day Retention</strong> <sup class="source-ref"><a href="#source-12" title="Курс — Конспект 5.1">[12]</a></sup><br>
+          Частка студентів, які продовжують навчання у наступному 28-денному циклі <sup class="source-ref"><a href="#source-3" title="Preply Help — 28-day subscription cycle">[3]</a></sup>.
+          <span class="formula">Formula: retained students / students in previous cycle × 100%</span>
+        </div>
+
+        <div class="metric">
+          <strong>3. LTV / CAC</strong> <sup class="source-ref"><a href="#source-12" title="Курс — Конспект 5.1">[12]</a></sup><br>
+          Співвідношення пожиттєвої цінності клієнта до вартості його залучення.
+          <span class="formula">Formula: LTV / CAC</span>
+        </div>
+
+        <h3>Supporting product metric</h3>
+        <div class="metric">
+          <strong>Lessons per Active Learner</strong><br>
+          Середня кількість успішно проведених уроків на одного активного студента за період.
+        </div>
+
+        <div class="north-star">
+          <small>North Star Metric <sup class="source-ref"><a href="#source-12" title="Курс — модель North Star">[12]</a></sup></small>
+          <strong>Кількість успішно проведених уроків за тиждень</strong>
+          <p class="muted" style="margin-top: 8px;">
+            Відображає реальну цінність для студента, дохід для викладача та активність marketplace.
+          </p>
+        </div>
+      </article>
+
+      <!-- 9 -->
+      <article class="card">
+        <div class="card-header">
+          <div class="number">9</div>
+          <h2>Неринкова перевага</h2>
+        </div>
+
+        <p>
+          <span class="strong">Network effect:</span>
+          більше студентів приваблює більше викладачів, а більше викладачів
+          підвищує вибір і цінність для студентів.
+        </p>
+
+        <p>
+          <span class="strong">Масштаб marketplace:</span>
+          понад 100 000 репетиторів із 180 країн <sup class="source-ref"><a href="#source-1" title="Preply — About us">[1]</a></sup>.
+        </p>
+
+        <p>
+          <span class="strong">Накопичені дані:</span>
+          matching student–tutor, retention, навчальні цілі,
+          поведінка користувачів і результати уроків.
+        </p>
+
+        <p class="muted">
+          Сильна перевага — не одна окрема функція, а поєднання liquidity marketplace,
+          network effect і накопичених даних.
+        </p>
+      </article>
+
+    </section>
+
+    <details class="sources">
+      <summary>Джерела</summary>
+      <ol>
+        <li id="source-1"><a href="https://preply.com/en/about-us" target="_blank" rel="noopener">Preply — About us</a></li>
+        <li id="source-2"><a href="https://preply.com/en/how-it-works" target="_blank" rel="noopener">Preply — How it works</a></li>
+        <li id="source-3"><a href="https://help.preply.com/en/articles/4966680-how-does-my-preply-subscription-work" target="_blank" rel="noopener">Preply Help — Subscription model</a></li>
+        <li id="source-4"><a href="https://help.preply.com/en/articles/4171383-preply-commission-model" target="_blank" rel="noopener">Preply Help — Commission model</a></li>
+        <li id="source-5"><a href="https://help.preply.com/en/articles/4179351-find-the-right-tutor-for-you" target="_blank" rel="noopener">Preply Help — Tutor matching</a></li>
+        <li id="source-6"><a href="https://preply.com/en/learning-research/1-on-1-tutoring-study-2025" target="_blank" rel="noopener">Preply / Leanlab — 1-on-1 Tutoring Study 2025</a></li>
+        <li id="source-7"><a href="https://preply.com/en/teach" target="_blank" rel="noopener">Preply — Become a tutor</a></li>
+        <li id="source-8"><a href="https://lp.preply.com/affiliate/" target="_blank" rel="noopener">Preply — Affiliate program, partnerships & co-marketing</a></li>
+        <li id="source-9"><a href="https://play.google.com/store/apps/details?id=com.preply" target="_blank" rel="noopener">Google Play — Preply</a></li>
+        <li id="source-10"><a href="https://apps.apple.com/ua/app/preply-language-lessons/id1352790442" target="_blank" rel="noopener">App Store — Preply</a></li>
+        <li id="source-11"><a href="https://preply.com/en/blog/preply-announces-new-ai-powered-features-to-guide-the-future-of-personalized-learning-in-a-human-ai-world/" target="_blank" rel="noopener">Preply — AI-powered personalized learning features</a></li>
+        <li id="source-12"><a href="https://strum.education/uk/student/courses" target="_blank" rel="noopener">Курс «Створення та розвиток ІТ-продуктів» — Конспект 5.1: метрики, Retention, Funnel, LTV/CAC, North Star</a></li>
+      </ol>
+    </details>
+
+    <p class="footnote">
+      Частина Lean Canvas є бізнес-аналізом на основі публічної інформації,
+      а не внутрішніми даними Preply.
+    </p>
+
+  </main>
+</body>
+</html>
