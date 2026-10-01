@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота №2 — Життєвий цикл вимог</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: min(1200px, 92%);
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .header-content {
+      width: min(1200px, 92%);
+      margin: 0 auto;
+      padding: 48px 0;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 36px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 26px;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 18px;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .meta-item {
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 10px;
+    }
+
+    .meta-label {
+      display: block;
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .block {
+      background: #ffffff;
+      margin-bottom: 28px;
+      padding: 28px;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .task-number {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 18px;
+      background: #fafafa;
+    }
+
+    .card h3 {
+      margin-top: 0;
+    }
+
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .flow-item {
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .arrow {
+      color: #6b7280;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 18px;
+    }
+
+    th,
+    td {
+      padding: 13px 14px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3f4f6;
+    }
+
+    tr:hover td {
+      background: #fafafa;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .business {
+      background: #ede9fe;
+      color: #5b21b6;
+    }
+
+    .functional {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .high {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .low {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .srs-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 18px;
+    }
+
+    .srs-label,
+    .srs-value {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .srs-label {
+      background: #f9fafb;
+      font-weight: bold;
+    }
+
+    .srs-grid > div:nth-last-child(-n+2) {
+      border-bottom: none;
+    }
+
+    .plus {
+      text-align: center;
+      font-weight: bold;
+      color: #166534;
+      font-size: 18px;
+    }
+
+    .change-step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 14px;
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111827;
+      color: white;
+      font-weight: bold;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .impact {
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+
+    .note {
+      border-left: 4px solid #6366f1;
+      padding: 12px 16px;
+      background: #f5f3ff;
+      border-radius: 6px;
+      margin-top: 18px;
+    }
+
+    ul {
+      padding-left: 22px;
+    }
+
+    footer {
+      text-align: center;
+      color: #6b7280;
+      padding: 18px;
+    }
+
+    @media (max-width: 700px) {
+      h1 {
+        font-size: 28px;
+      }
+
+      .block {
+        padding: 20px;
+      }
+
+      .srs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .srs-label {
+        border-bottom: none;
+        padding-bottom: 6px;
+      }
+
+      .srs-value {
+        padding-top: 6px;
+      }
+
+      .arrow {
+        display: none;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .block {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-content">
+    <h1>Лабораторна робота №2</h1>
+    <div class="subtitle">
+      Життєвий цикл вимог та основні етапи управління ними
+    </div>
+
+    <div class="meta">
+      <div class="meta-item">
+        <span class="meta-label">Дисципліна</span>
+        Управління вимогами до інформаційних систем та технологій
+      </div>
+
+      <div class="meta-item">
+        <span class="meta-label">Студент</span>
+        Дмитро Лаптій
+      </div>
+
+      <div class="meta-item">
+        <span class="meta-label">Група</span>
+        36Бд-ІСТ
+      </div>
+
+      <div class="meta-item">
+        <span class="meta-label">Рік</span>
+        2026
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<main class="container">
+
+  <section class="block">
+    <h2>Мета роботи</h2>
+    <p>
+      Вивчити життєвий цикл вимог, основні етапи управління вимогами
+      та застосувати їх на практичному прикладі інформаційної системи
+      адаптивного навчання з інтелектуальним навчальним агентом.
+    </p>
+  </section>
+
+
+  <section class="block">
+    <h2>Предметна область</h2>
+
+    <h3>
+      Інформаційна система адаптивного навчання
+      з інтелектуальним навчальним агентом
+    </h3>
+
+    <p>
+      Система призначена для організації адаптивного освітнього процесу,
+      у якому здобувач освіти взаємодіє з інтелектуальним навчальним агентом,
+      отримує персоналізований навчальний матеріал та завдання,
+      а викладач керує навчальним процесом і аналізує прогрес.
+    </p>
+
+    <p>
+      Інтелектуальний агент аналізує відповіді здобувача освіти,
+      визначає рівень засвоєння матеріалу та адаптує подальший навчальний сценарій.
+    </p>
+  </section>
+
+
+  <section class="block">
+    <h2>Життєвий цикл вимог у проєкті</h2>
+
+    <div class="flow">
+      <div class="flow-item">Збирання</div>
+      <div class="arrow">→</div>
+      <div class="flow-item">Аналіз</div>
+      <div class="arrow">→</div>
+      <div class="flow-item">Специфікація</div>
+      <div class="arrow">→</div>
+      <div class="flow-item">Верифікація</div>
+      <div class="arrow">→</div>
+      <div class="flow-item">Валідація</div>
+      <div class="arrow">→</div>
+      <div class="flow-item">Трасування</div>
+      <div class="arrow">→</div>
+      <div class="flow-item">Управління змінами</div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Збирання</h3>
+        <p>
+          Визначення потреб викладачів, здобувачів освіти та адміністрації
+          за допомогою інтерв'ю, анкетування й аналізу документів.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Аналіз</h3>
+        <p>
+          Уточнення вимог, перевірка суперечностей,
+          визначення пріоритетів і меж майбутньої системи.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Специфікація</h3>
+        <p>
+          Формальне документування функціональних
+          і нефункціональних вимог у вигляді SRS.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Верифікація та валідація</h3>
+        <p>
+          Перевірка правильності формулювання вимог
+          та відповідності реальним потребам користувачів.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Трасування</h3>
+        <p>
+          Встановлення зв'язків між бізнес-вимогами,
+          функціональними вимогами, реалізацією та тестуванням.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Управління змінами</h3>
+        <p>
+          Контроль нових або змінених вимог,
+          оцінка їх впливу на систему, строки, бюджет та ризики.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="block">
+    <span class="task-number">Завдання 1</span>
+    <h2>Етап збирання вимог</h2>
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>Інтерв'ю з викладачем</h3>
+        <p><strong>Мета:</strong> визначити очікування щодо навчального процесу та аналітики.</p>
+
+        <p><strong>Приклади питань:</strong></p>
+        <ul>
+          <li>
+            Яку інформацію про прогрес здобувача освіти ви хотіли б бачити,
+            крім підсумкової оцінки?
+          </li>
+          <li>
+            За якими ознаками ви визначаєте, що студент дійсно зрозумів матеріал?
+          </li>
+          <li>
+            Які рішення щодо навчання повинні залишатися виключно за викладачем?
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="card">
+        <h3>Анкетування здобувачів освіти</h3>
+        <p><strong>Мета:</strong> визначити потреби студентів щодо форми подання матеріалу.</p>
+
+        <p><strong>Приклади питань:</strong></p>
+        <ul>
+          <li>
+            У яких ситуаціях вам найбільше потрібне додаткове пояснення матеріалу?
+          </li>
+          <li>
+            Який формат зворотного зв'язку після помилки є для вас найбільш корисним?
+          </li>
+          <li>
+            Чи корисною була б можливість отримувати завдання різної складності?
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="card">
+        <h3>Аналіз документації</h3>
+        <p><strong>Документи:</strong></p>
+
+        <ul>
+          <li>навчальна програма дисципліни;</li>
+          <li>структура курсу та навчальних тем;</li>
+          <li>критерії оцінювання;</li>
+          <li>правила академічної доброчесності;</li>
+          <li>правила обробки персональних даних.</li>
+        </ul>
+      </div>
+
+
+      <div class="card">
+        <h3>Прототипування</h3>
+        <p>
+          Створення спрощеного прототипу інтерфейсу взаємодії
+          студента з навчальним агентом та екрану аналітики для викладача.
+        </p>
+
+        <p>
+          Прототип дозволяє отримати ранній зворотний зв'язок
+          і уточнити вимоги до системи до початку повної реалізації.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section class="block">
+    <span class="task-number">Завдання 2</span>
+    <h2>Фрагмент SRS-специфікації</h2>
+
+    <div class="srs-grid">
+
+      <div class="srs-label">Назва функції</div>
+      <div class="srs-value">
+        Адаптація навчального завдання на основі відповіді здобувача освіти
+      </div>
+
+      <div class="srs-label">Опис</div>
+      <div class="srs-value">
+        Система аналізує відповідь здобувача освіти,
+        визначає рівень засвоєння матеріалу та формує наступну навчальну дію.
+        Наступною дією може бути нове завдання, додаткове пояснення,
+        уточнювальне питання або зміна рівня складності.
+      </div>
+
+      <div class="srs-label">Вхідні дані</div>
+      <div class="srs-value">
+        <ul>
+          <li>відповідь здобувача освіти;</li>
+          <li>поточна тема;</li>
+          <li>поточний рівень складності;</li>
+          <li>ціль навчального завдання;</li>
+          <li>історія попередніх відповідей.</li>
+        </ul>
+      </div>
+
+      <div class="srs-label">Вихідні дані / результат</div>
+      <div class="srs-value">
+        <ul>
+          <li>оцінка рівня розуміння матеріалу;</li>
+          <li>наступне навчальне завдання;</li>
+          <li>додаткове пояснення за необхідності;</li>
+          <li>оновлений показник навчального прогресу;</li>
+          <li>оновлена складність або тип наступного завдання.</li>
+        </ul>
+      </div>
+
+      <div class="srs-label">Основний сценарій</div>
+      <div class="srs-value">
+        <ol>
+          <li>Студент отримує навчальне завдання.</li>
+          <li>Студент надає відповідь.</li>
+          <li>Система аналізує відповідь.</li>
+          <li>Визначається рівень засвоєння матеріалу.</li>
+          <li>Система вибирає наступну навчальну дію.</li>
+          <li>Результат взаємодії зберігається в історії прогресу.</li>
+        </ol>
+      </div>
+
+      <div class="srs-label">Виняткові ситуації</div>
+      <div class="srs-value">
+        <ul>
+          <li>
+            Відповідь відсутня — система просить користувача надати відповідь.
+          </li>
+          <li>
+            Відповідь не відповідає темі — система формує уточнювальне питання.
+          </li>
+          <li>
+            Відповідь неможливо однозначно оцінити —
+            система просить студента пояснити її додатково.
+          </li>
+          <li>
+            Зовнішній ШІ-сервіс недоступний —
+            система повідомляє про помилку та не втрачає введені дані.
+          </li>
+          <li>
+            Помилка збереження прогресу —
+            система повторює операцію або повідомляє користувача про проблему.
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="note">
+      Обрана функція є ключовою для системи,
+      оскільки саме вона забезпечує адаптивність навчального процесу.
+    </div>
+  </section>
+
+
+  <section class="block">
+    <span class="task-number">Завдання 3</span>
+    <h2>Матриця трасування вимог</h2>
+
+    <p>
+      Матриця показує зв'язок між бізнес-вимогами
+      та функціональними вимогами системи.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Бізнес-вимога</th>
+            <th>FR-01<br>Взаємодія з агентом</th>
+            <th>FR-02<br>Аналіз відповіді</th>
+            <th>FR-03<br>Адаптація завдання</th>
+            <th>FR-04<br>Збереження прогресу</th>
+            <th>FR-05<br>Аналітика викладачу</th>
+            <th>FR-06<br>Навчальний матеріал</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>
+              <span class="badge business">BR-01</span><br>
+              Персоналізація навчання
+            </td>
+            <td class="plus">+</td>
+            <td class="plus">+</td>
+            <td class="plus">+</td>
+            <td></td>
+            <td></td>
+            <td class="plus">+</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="badge business">BR-02</span><br>
+              Аналіз навчального прогресу
+            </td>
+            <td></td>
+            <td class="plus">+</td>
+            <td></td>
+            <td class="plus">+</td>
+            <td class="plus">+</td>
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="badge business">BR-03</span><br>
+              Зменшення формального виконання завдань
+              без фактичного засвоєння матеріалу
+            </td>
+            <td class="plus">+</td>
+            <td class="plus">+</td>
+            <td class="plus">+</td>
+            <td></td>
+            <td class="plus">+</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      Якщо бізнес-вимога змінюється, матриця дозволяє швидко визначити,
+      які функціональні вимоги необхідно переглянути.
+    </div>
+  </section>
+
+
+  <section class="block">
+    <span class="task-number">Завдання 4</span>
+    <h2>Управління змінами у вимогах</h2>
+
+    <h3>Сценарій зміни</h3>
+
+    <p>
+      Під час розробки замовник вимагає додати можливість
+      відповідати на навчальні завдання голосом,
+      а не лише вводити текстову відповідь.
+    </p>
+
+    <h3>Алгоритм опрацювання Change Request</h3>
+
+    <div class="change-step">
+      <div class="step-number">1</div>
+      <div>
+        <strong>Зафіксувати зміну.</strong><br>
+        Створити Change Request з описом нової функціональності,
+        причиною зміни та очікуваною цінністю.
+      </div>
+    </div>
+
+    <div class="change-step">
+      <div class="step-number">2</div>
+      <div>
+        <strong>Визначити пов'язані вимоги.</strong><br>
+        Перевірити, які існуючі функціональні
+        та нефункціональні вимоги зачіпає голосове введення.
+      </div>
+    </div>
+
+    <div class="change-step">
+      <div class="step-number">3</div>
+      <div>
+        <strong>Оцінити технічний вплив.</strong><br>
+        Визначити необхідність використання Speech-to-Text,
+        зміни інтерфейсу, API та моделі обробки відповідей.
+      </div>
+    </div>
+
+    <div class="change-step">
+      <div class="step-number">4</div>
+      <div>
+        <strong>Оцінити вплив на дані та безпеку.</strong><br>
+        Визначити, чи потрібно зберігати аудіофайли,
+        як вони будуть захищені та хто матиме до них доступ.
+      </div>
+    </div>
+
+    <div class="change-step">
+      <div class="step-number">5</div>
+      <div>
+        <strong>Оцінити строки та бюджет.</strong><br>
+        Врахувати час на інтеграцію нового сервісу,
+        розробку UI, тестування та можливі додаткові витрати на API.
+      </div>
+    </div>
+
+    <div class="change-step">
+      <div class="step-number">6</div>
+      <div>
+        <strong>Оцінити ризики.</strong><br>
+        Проаналізувати якість розпізнавання мовлення,
+        підтримку різних мов, шум, доступність сервісу
+        та можливі проблеми з персональними даними.
+      </div>
+    </div>
+
+    <div class="change-step">
+      <div class="step-number">7</div>
+      <div>
+        <strong>Погодити зміну.</strong><br>
+        Передати оцінку замовнику та прийняти рішення:
+        прийняти, відкласти або відхилити зміну.
+      </div>
+    </div>
+
+    <div class="change-step">
+      <div class="step-number">8</div>
+      <div>
+        <strong>Оновити документацію.</strong><br>
+        У разі погодження оновити SRS,
+        матрицю трасування та відповідні тестові сценарії.
+      </div>
+    </div>
+
+
+    <h3>Оцінка впливу зміни</h3>
+
+    <div class="impact-grid">
+
+      <div class="impact">
+        <strong>Терміни</strong>
+        <p>
+          Збільшаться через розробку нового інтерфейсу,
+          інтеграцію Speech-to-Text та додаткове тестування.
+        </p>
+      </div>
+
+      <div class="impact">
+        <strong>Бюджет</strong>
+        <p>
+          Може зрости через використання зовнішнього API
+          та збільшення обсягу розробки й тестування.
+        </p>
+      </div>
+
+      <div class="impact">
+        <strong>Інші вимоги</strong>
+        <p>
+          Необхідно переглянути вимоги до приватності,
+          продуктивності, інтерфейсу та зберігання даних.
+        </p>
+      </div>
+
+      <div class="impact">
+        <strong>Ризики</strong>
+        <p>
+          Помилки розпізнавання мовлення,
+          нестабільність зовнішнього сервісу
+          та питання захисту голосових даних.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section class="block">
+    <h2>Контрольні запитання</h2>
+
+    <h3>1. У чому різниця між верифікацією та валідацією вимог?</h3>
+
+    <p>
+      <strong>Верифікація</strong> перевіряє,
+      чи правильно сформульовані вимоги:
+      чи вони повні, несуперечливі, зрозумілі та перевірювані.
+    </p>
+
+    <p>
+      <strong>Валідація</strong> перевіряє,
+      чи описані вимоги дійсно відповідають потребам користувачів і замовника.
+    </p>
+
+
+    <h3>2. Для чого потрібна матриця трасування вимог?</h3>
+
+    <p>
+      Матриця трасування дозволяє бачити зв'язки між бізнес-цілями,
+      функціональними вимогами, реалізацією та тестуванням.
+      Вона допомагає визначити вплив змін та перевірити,
+      що кожна важлива бізнес-вимога реалізована системою.
+    </p>
+
+
+    <h3>
+      3. Які методи збирання вимог найбільш ефективні
+      для складних корпоративних систем?
+    </h3>
+
+    <p>
+      Для складних систем найкращий результат зазвичай дає комбінація методів:
+      інтерв'ю зі стейкхолдерами, воркшопи,
+      аналіз документації, спостереження за робочими процесами,
+      анкетування та прототипування.
+    </p>
+
+
+    <h3>
+      4. Чому неконтрольовані зміни вимог призводять до Scope Creep?
+    </h3>
+
+    <p>
+      Кожна нова вимога може потребувати додаткової розробки,
+      тестування, зміни архітектури та документації.
+      Якщо такі зміни додаються без оцінки впливу та перегляду строків і бюджету,
+      обсяг проєкту поступово збільшується,
+      а початкові ресурси вже не відповідають новому масштабу роботи.
+    </p>
+  </section>
+
+
+  <section class="block">
+    <h2>Висновки</h2>
+
+    <p>
+      У ході лабораторної роботи було розглянуто життєвий цикл вимог
+      на прикладі інформаційної системи адаптивного навчання
+      з інтелектуальним навчальним агентом.
+    </p>
+
+    <p>
+      Було визначено методи збирання вимог,
+      сформовано фрагмент SRS для ключової функції,
+      побудовано матрицю трасування та змодельовано процес
+      внесення змін до вимог.
+    </p>
+
+    <p>
+      Трасування дозволяє підтримувати зв'язок між бізнес-цілями
+      та функціональністю системи,
+      а контроль змін допомагає уникати некерованого збільшення
+      обсягу проєкту, затримок і додаткових витрат.
+    </p>
+  </section>
+
+</main>
+
+
+<footer>
+  Лабораторна робота №2 • 2026
+</footer>
+
+</body>
+</html>
+
