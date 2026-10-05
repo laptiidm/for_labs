@@ -1,0 +1,9 @@
+/home/dmytrolaptii/untitled/build/Desktop-Debug/CMakeFiles/untitled.dir
+/home/dmytrolaptii/untitled/build/Desktop-Debug/CMakeFiles/edit_cache.dir
+/home/dmytrolaptii/untitled/build/Desktop-Debug/CMakeFiles/rebuild_cache.dir
+/home/dmytrolaptii/untitled/build/Desktop-Debug/CMakeFiles/list_install_components.dir
+/home/dmytrolaptii/untitled/build/Desktop-Debug/CMakeFiles/install.dir
+/home/dmytrolaptii/untitled/build/Desktop-Debug/CMakeFiles/install/local.dir
+/home/dmytrolaptii/untitled/build/Desktop-Debug/CMakeFiles/install/strip.dir
+/home/dmytrolaptii/untitled/build/Desktop-Debug/CMakeFiles/untitled_autogen_timestamp_deps.dir
+/home/dmytrolaptii/untitled/build/Desktop-Debug/CMakeFiles/untitled_autogen.dir
